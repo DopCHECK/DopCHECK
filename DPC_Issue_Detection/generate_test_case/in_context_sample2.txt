@@ -1,0 +1,11 @@
+public void testGetAllCellInfo() {
+    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
+        
+        assertNotNull("CellInfo list is null", cellInfoList);
+    } else {
+        fail("Permission not granted for ACCESS_FINE_LOCATION");
+    }
+}

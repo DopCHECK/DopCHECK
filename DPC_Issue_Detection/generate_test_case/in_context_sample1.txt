@@ -1,0 +1,22 @@
+public class MyPhoneStateListener extends PhoneStateListener {
+
+    @Override
+    public void onCallStateChanged(int state, String incomingNumber) {
+        super.onCallStateChanged(state, incomingNumber);
+
+        switch (state) {
+            case TelephonyManager.CALL_STATE_RINGING:
+                // The phone is ringing
+                Log.d("MyPhoneListener", "Device is ringing. Incoming number is " + incomingNumber);
+                break;
+            case TelephonyManager.CALL_STATE_OFFHOOK:
+                // A call is dialing, active or on hold
+                Log.d("MyPhoneListener", "Device call state is off-hook. Incoming number is " + incomingNumber);
+                break;
+            case TelephonyManager.CALL_STATE_IDLE:
+                // When the call ends
+                Log.d("MyPhoneListener", "Device call state is idle");
+                break;
+        }
+    }
+}

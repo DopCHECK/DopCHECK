@@ -1,0 +1,22 @@
+``java
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Get the app-specific directory in external storage
+        File externalFilesDir = getExternalFilesDir(null);
+
+        if (externalFilesDir != null) {
+            // Get the absolute path of the directory
+            String path = externalFilesDir.getAbsolutePath();
+
+            // Log the path
+            Log.d("MainActivity", "App-specific external files directory: " + path);
+        } else {
+            Log.d("MainActivity", "External storage not available");
+        }
+    }
+}

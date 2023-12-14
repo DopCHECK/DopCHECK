@@ -1,0 +1,24 @@
+``java
+final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    // Request the necessary permissions
+    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    return;
+}
+
+if (telephonyManager != null) {
+    telephonyManager.requestCellInfoUpdate(Executors.newSingleThreadExecutor(), new TelephonyManager.CellInfoCallback() {
+        @Override
+        public void onCellInfo(List<CellInfo> cellInfoList) {
+            for (CellInfo cellInfo : cellInfoList) {
+                if (cellInfo instanceof CellInfoGsm) {
+                    CellSignalStrengthGsm cellSignalStrengthGsm = ((CellInfoGsm) cellInfo).getCellSignalStrength();
+                    CellIdentityGsm cellIdentityGsm = ((CellInfoGsm) cellInfo).getCellIdentity();
+                    // Do something with the cell signal strength and cell identity
+                }
+                // Similarly handle for CellInfoCdma, CellInfoLte, CellInfoWcdma, CellInfoTdscdma and CellInfoNr
+            }
+        }
+    });
+}

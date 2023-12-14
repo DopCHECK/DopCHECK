@@ -1,0 +1,54 @@
+``java
+public class MainActivity extends AppCompatActivity {
+
+    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private UsbManager usbManager;
+    private UsbDevice usbDevice;
+    private PendingIntent permissionIntent;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+
+        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+        registerReceiver(usbReceiver, filter);
+
+        HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
+        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        while(deviceIterator.hasNext()){
+            UsbDevice device = deviceIterator.next();
+            // Check if the device is the one you need
+            if (device.getVendorId() == YOUR_VENDOR_ID && device.getProductId() == YOUR_PRODUCT_ID) {
+                usbDevice = device;
+                if (!usbManager.hasPermission(usbDevice)) {
+                    usbManager.requestPermission(usbDevice, permissionIntent);
+                } else {
+                    // You already have permission, you can access the serial number here
+                }
+                break;
+            }
+        }
+    }
+
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if(device != null){
+                            // Permission granted, you can access the serial number here
+                        }
+                    } else {
+                        Log.d("USB_PERMISSION", "permission denied for device " + device);
+                    }
+                }
+            }
+        }
+    };
+}

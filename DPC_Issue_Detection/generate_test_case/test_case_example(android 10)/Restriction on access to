@@ -1,0 +1,33 @@
+``java
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        NetworkStatsManager networkStatsManager = (NetworkStatsManager) getSystemService(Context.NETWORK_STATS_SERVICE);
+        NetworkStats.Bucket bucket;
+        try {
+            bucket = networkStatsManager.querySummaryForDevice(ConnectivityManager.TYPE_WIFI,
+                    getSubscriberId(ConnectivityManager.TYPE_WIFI),
+                    0,
+                    System.currentTimeMillis());
+        } catch (RemoteException e) {
+            return;
+        }
+
+        long rxBytes = bucket.getRxBytes();
+        long txBytes = bucket.getTxBytes();
+
+        Log.d("NetworkStats", "Received: " + rxBytes + " bytes, Transmitted: " + txBytes + " bytes");
+    }
+
+    private String getSubscriberId(int networkType) {
+        if (ConnectivityManager.TYPE_MOBILE == networkType) {
+            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            return tm.getSubscriberId();
+        }
+        return "";
+    }
+}

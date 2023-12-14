@@ -1,0 +1,89 @@
+
+public class MainActivity extends AppCompatActivity {
+
+    private GeofencingClient geofencingClient;
+    private PendingIntent geofencePendingIntent;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        geofencingClient = LocationServices.getGeofencingClient(this);
+
+        // Create a geofence
+        Geofence geofence = new Geofence.Builder()
+                .setRequestId("myGeofenceId")
+                .setCircularRegion(37.422, -122.084, 1000) // lat, long, radius in meters
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
+
+        // Create a geofencing request
+        GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .addGeofence(geofence)
+                .build();
+
+        // Add the geofence
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1234);
+            return;
+        }
+        geofencingClient.addGeofences(geofencingRequest, getGeofencePendingIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Geofences added
+                        Log.d("MainActivity", "Geofence added");
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to add geofences
+                        Log.d("MainActivity", "Failed to add geofence", e);
+                    }
+                });
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
+        geofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
+    }
+}
+```
+
+Finally, create a BroadcastReceiver to handle the geofence transitions:
+
+```java
+public class GeofenceBroadcastReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        if (geofencingEvent.hasError()) {
+            Log.d("GeofenceReceiver", "Geofencing error: " + geofencingEvent.getErrorCode());
+            return;
+        }
+
+        int geofenceTransition = geofencingEvent.getGeofenceTransition();
+
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            Log.d("GeofenceReceiver", "Entered geofence");
+        } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            Log.d("GeofenceReceiver", "Exited geofence");
+        }
+    }
+}
+```
+
+Remember to register your BroadcastReceiver in your AndroidManifest.xml:
+
+```xml
+<receiver android:name=".GeofenceBroadcastReceiver" />

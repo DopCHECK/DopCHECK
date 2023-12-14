@@ -1,0 +1,20 @@
+public void testAccessCallLog() {
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, null);
+            assertNotNull("Cursor is null, access to call log failed", cursor);
+        } catch (SecurityException e) {
+            fail("SecurityException occurred: " + e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    } else {
+        fail("Permission not granted for READ_CALL_LOG");
+    }
+}
+
+private static final int REQUEST_READ_CALL_LOG = 1;

@@ -1,0 +1,29 @@
+``java
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", "Text to copy");
+        clipboard.setPrimaryClip(clip);
+
+        // Check if clipboard contains data
+        if (clipboard.hasPrimaryClip()) {
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+            String pasteData = item.getText().toString();
+
+            // Show the copied data
+            Toast.makeText(this, "Copied text: " + pasteData, Toast.LENGTH_SHORT).show();
+        }
+    }
+}

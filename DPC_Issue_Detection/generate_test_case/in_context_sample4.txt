@@ -1,0 +1,17 @@
+public void testCurrencyGetDisplayName() {
+    try {
+        
+        Currency currency = Currency.getInstance("USD");
+
+        String displayName = currency.getDisplayName(null);
+
+  
+        fail("Expected NullPointerException to be thrown");
+    } catch (NullPointerException e) {
+ 
+        assertTrue("NullPointerException was thrown as expected", true);
+    } catch (Exception e) {
+     
+        fail("Expected NullPointerException, but another exception was thrown: " + e.getClass().getSimpleName());
+    }
+}

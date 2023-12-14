@@ -1,0 +1,60 @@
+``java
+// Get the instance of the WifiManager
+WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+// Create a new WifiNetworkSpecifier
+WifiNetworkSpecifier.Builder builder = new WifiNetworkSpecifier.Builder();
+builder.setSsid("NetworkSSID");
+builder.setWpa2Passphrase("NetworkPassword");
+WifiNetworkSpecifier wifiNetworkSpecifier = builder.build();
+
+// Create a new NetworkRequest using the WifiNetworkSpecifier
+NetworkRequest.Builder networkRequestBuilder = new NetworkRequest.Builder();
+networkRequestBuilder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
+networkRequestBuilder.setNetworkSpecifier(wifiNetworkSpecifier);
+NetworkRequest networkRequest = networkRequestBuilder.build();
+
+// Register the NetworkCallback
+ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+connectivityManager.requestNetwork(networkRequest, new ConnectivityManager.NetworkCallback() {
+    @Override
+    public void onAvailable(Network network) {
+        // Use this network
+        connectivityManager.bindProcessToNetwork(network);
+    }
+});
+
+// Enable the network
+wifiManager.setWifiEnabled(true);
+
+// Disable the network
+wifiManager.setWifiEnabled(false);
+
+// Reconnect to the network
+wifiManager.reconnect();
+
+// Disconnect from the network
+wifiManager.disconnect();
+
+// Reassociate with the network
+wifiManager.reassociate();
+```
+
+Please note that these methods require certain permissions and may not work on all versions of Android. For example, the `setWifiEnabled()` method was deprecated in API level 29 (Android 10) and the ability to enable/disable Wi-Fi was removed in API level 30 (Android 11). Also, the `reassociate()` method was deprecated in API level 29. 
+
+The `addNetwork()`, `updateNetwork()`, and `removeNetwork()` methods are part of the `WifiManager` class and are used to manage configured networks. Here's an example:
+
+```java
+// Create a new WifiConfiguration
+WifiConfiguration wifiConfig = new WifiConfiguration();
+wifiConfig.SSID = "\"NetworkSSID\"";
+wifiConfig.preSharedKey = "\"NetworkPassword\"";
+
+// Add the network
+int netId = wifiManager.addNetwork(wifiConfig);
+
+// Update the network
+wifiManager.updateNetwork(wifiConfig);
+
+// Remove the network
+wifiManager.removeNetwork(netId);

@@ -1,0 +1,30 @@
+``java
+public void showWifiSettingsPanel() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        Intent panelIntent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+        startActivityForResult(panelIntent, 0);
+    }
+}
+```
+
+This will open a settings panel for the user to manually enable or disable Wi-Fi. 
+
+If you want to check if Wi-Fi is enabled or not, you can use `WifiManager.getWifiState()` method:
+
+```java
+WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+if (wifiManager != null) {
+    int wifiState = wifiManager.getWifiState();
+    if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
+        // Wi-Fi is enabled
+    } else if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
+        // Wi-Fi is disabled
+    }
+}
+```
+
+Remember to add the necessary permissions in your AndroidManifest.xml file:
+
+```xml
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

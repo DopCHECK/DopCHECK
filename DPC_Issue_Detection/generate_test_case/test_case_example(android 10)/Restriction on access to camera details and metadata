@@ -1,0 +1,15 @@
+``java
+String cameraId;
+CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+try {
+    cameraId = cameraManager.getCameraIdList()[0]; // Use the first camera
+    CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
+    float[] lensPoseRotation = characteristics.get(CameraCharacteristics.LENS_POSE_ROTATION);
+    if (lensPoseRotation != null) {
+        Log.d("Camera", "Lens Pose Rotation: " + Arrays.toString(lensPoseRotation));
+    } else {
+        Log.d("Camera", "Lens Pose Rotation not available");
+    }
+} catch (CameraAccessException e) {
+    e.printStackTrace();
+}
