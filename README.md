@@ -38,7 +38,7 @@ Below we describe each main file in our folder below.
 
 ### Initial app interface
 <!-- ![image](https://github.com/YanChuan390/DopCHECK/blob/main/Initial%20app%20interface.png) -->
-<img src="https://github.com/DopCHECK/DopCHECK/blob/main/Initial%20app%20interface.png" width="400px">
+<img src="https://github.com/DopCHECK/DopCHECK/blob/main/Initial%20app%20interface.png" width="300px">
 
 ### Extracting DPC Examples
 
