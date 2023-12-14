@@ -38,7 +38,12 @@ Below we describe each main file in our folder below.
 
 ### Initial app interface
 <!-- ![image](https://github.com/YanChuan390/DopCHECK/blob/main/Initial%20app%20interface.png) -->
-<img src="https://github.com/YanChuan390/DopCHECK/blob/main/Initial%20app%20interface.png" width="400px">
+<img src="https://github.com/DopCHECK/DopCHECK/blob/main/Initial%20app%20interface.png" width="400px">
 
+### Extracting DPC Examples
 
+#### Android 10 DPC Sample
+<img src="https://github.com/DopCHECK/DopCHECK/blob/main/android10_DPC_sample.png" width="400px">
 
+#### DPC Result
+<img src="https://github.com/DopCHECK/DopCHECK/blob/main/run_extract_DPC.py_result.png" width="400px">
